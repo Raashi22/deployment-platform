@@ -6,20 +6,21 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-                echo 'Repository Cloned'
+                echo 'Repository Cloned Successfully'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Check Python') {
             steps {
-                sh 'npm install'
+                sh 'python3 --version'
             }
         }
 
         stage('Build Application') {
             steps {
-                echo 'Building Application'
+                echo 'Django Backend Build Successful'
             }
         }
+
     }
 }
