@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "deployment-platform"
+        PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
     }
 
     stages {
@@ -11,6 +11,12 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo 'Repository Cloned Successfully'
+            }
+        }
+
+        stage('Check Docker') {
+            steps {
+                sh 'docker --version'
             }
         }
 
@@ -30,12 +36,6 @@ pipeline {
         stage('Check Kubernetes Pods') {
             steps {
                 sh 'kubectl get pods'
-            }
-        }
-
-        stage('Check Services') {
-            steps {
-                sh 'kubectl get services'
             }
         }
 
