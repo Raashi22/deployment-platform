@@ -2,6 +2,10 @@ pipeline {
 
     agent any
 
+    environment {
+        IMAGE_NAME = "deployment-platform"
+    }
+
     stages {
 
         stage('Clone Repository') {
@@ -10,17 +14,41 @@ pipeline {
             }
         }
 
-        stage('Check Python') {
+        stage('Build Docker Image') {
             steps {
-                sh 'python3 --version'
+                sh 'docker build -t deployment-platform .'
             }
         }
 
-        stage('Build Application') {
+        stage('Deploy to Kubernetes') {
             steps {
-                echo 'Django Backend Build Successful'
+                sh 'kubectl apply -f k8s/deployment.yaml'
+                sh 'kubectl apply -f k8s/service.yaml'
             }
         }
 
+        stage('Check Kubernetes Pods') {
+            steps {
+                sh 'kubectl get pods'
+            }
+        }
+
+        stage('Check Services') {
+            steps {
+                sh 'kubectl get services'
+            }
+        }
+
+    }
+
+    post {
+
+        success {
+            echo 'CI/CD Pipeline Executed Successfully'
+        }
+
+        failure {
+            echo 'Pipeline Failed'
+        }
     }
 }
